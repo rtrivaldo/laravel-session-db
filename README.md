@@ -1,58 +1,218 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 Laravel Authentication, Session & Database Relationship Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Overview
 
-## About Laravel
+This project is a simple web application built using **Laravel** that
+demonstrates fundamental web development concepts, including:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Authentication (Register, Login, Logout)
+- Session Management
+- Database Relationships (Product & Variant)
+- Route Protection using Middleware
+- MVC Architecture
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project is designed as a learning implementation of how Laravel handles
+user authentication, data management, and access control.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🧱 Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Framework:** Laravel
+- **Language:** PHP
+- **Database:** MySQL
+- **Frontend:** Blade (Laravel Template Engine)
+- **Server:** Laragon / Localhost
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🗄️ Database Structure
 
-## Agentic Development
+### 1. Users Table
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Stores user authentication data.
 
-```bash
-composer require laravel/boost --dev
+| Field    | Description     |
+| -------- | --------------- |
+| id       | Primary Key     |
+| name     | User name       |
+| email    | User email      |
+| password | Hashed password |
 
-php artisan boost:install
+---
+
+### 2. Products Table
+
+| Field | Description  |
+| ----- | ------------ |
+| id    | Primary Key  |
+| name  | Product name |
+
+---
+
+### 3. Variants Table
+
+| Field      | Description            |
+| ---------- | ---------------------- |
+| id         | Primary Key            |
+| name       | Variant name           |
+| product_id | Foreign key (products) |
+
+---
+
+## 🔗 Database Relationship
+
+- One Product → Many Variants
+- One Variant → Belongs to one Product
+
+```php
+// Product Model
+public function variants()
+{
+    return $this->hasMany(Variant::class);
+}
+
+// Variant Model
+public function product()
+{
+    return $this->belongsTo(Product::class);
+}
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🔐 Authentication Features
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- ✅ User Registration
+- ✅ User Login
+- ✅ User Logout
+- ✅ Session-based Authentication
 
-## Code of Conduct
+Laravel handles authentication using session storage.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🗂️ Session Management
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+This project demonstrates how to:
 
-## License
+- Store session data
+- Retrieve session data
+- Delete session data
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Example:
+
+```php
+session(['product_name' => 'Example']);
+session('product_name');
+session()->forget('product_name');
+```
+
+---
+
+## 🛡️ Route Protection (Middleware)
+
+Protected routes are secured using Laravel middleware:
+
+```php
+Route::middleware('auth')->group(function () {
+    Route::get('/products', ...);
+});
+```
+
+Only authenticated users can access protected routes.
+
+---
+
+## 🌐 Routes Overview
+
+### Public Routes
+
+- `/login`
+- `/register`
+
+### Protected Routes
+
+- `/dashboard`
+- `/products`
+
+### Session Routes
+
+- `/session/store`
+- `/session/get`
+- `/session/delete`
+
+---
+
+## 📊 Features
+
+- Display products and their variants
+- Authentication system
+- Session handling
+- Protected routes using middleware
+- Simple UI using Blade
+
+---
+
+## 🔄 Application Flow
+
+1. User opens the application
+2. User registers or logs in
+3. Laravel stores user data in session
+4. User accesses protected routes
+5. Application fetches data from database
+6. User logs out → session is destroyed
+
+---
+
+## ⚙️ Installation Guide
+
+Follow these steps to run the project locally:
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/laravel-session-db.git
+
+# Go to project folder
+cd laravel-session-db
+
+# Install dependencies
+composer install
+
+# Copy environment file
+cp .env.example .env
+
+# Generate app key
+php artisan key:generate
+
+# Configure database in .env
+
+# Run migration
+php artisan migrate
+
+# Start server
+php artisan serve
+```
+
+---
+
+## 🎯 Key Concepts Implemented
+
+- MVC (Model-View-Controller)
+- Eloquent ORM
+- Authentication (Session-based)
+- Middleware Security
+- Relational Database Design
+
+---
+
+## 👨‍💻 Author
+
+**Rivaldo Tandoko** Frontend Developer & Informatics Engineering Student
+
+---
+
+## ⭐ Notes
+
+This project demonstrates the integration of authentication, session management,
+and relational databases within a structured Laravel application.
